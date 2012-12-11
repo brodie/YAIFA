@@ -49,6 +49,12 @@ else
         let s:default_tab_width = s:swset ? &sw : 4
 endif
 
+if exists('g:yaifa_tab_tab_width')
+        let s:tab_tab_width = g:yaifa_tab_tab_width
+else
+        let s:tab_tab_width = s:default_tab_width
+endif
+
 
 let s:verbose_quiet = 0
 let s:verbose_info  = 1
@@ -369,7 +375,7 @@ function! s:results()
 
         " Detect tab files
         elseif max_line_tab > max_line_mixed && max_line_tab > max_line_space
-                let result = ['tab', s:default_tab_width]
+                let result = ['tab', s:tab_tab_width]
 
         " Detect mixed files
         elseif max_line_mixed >= max_line_tab && max_line_mixed > max_line_space
@@ -401,6 +407,10 @@ function! s:results()
 endfunction
 
 function! YAIFA(...)
+        if exists("b:yaifa_disabled")
+                return
+        endif
+
         " The magic starts here
         call s:clear()
         call s:parse_file()
@@ -422,7 +432,7 @@ function! YAIFA(...)
                 " => set tabstop to preferred value
                 " => set expandtab to false
                 " => set shiftwidth to tabstop
-                let cmd = 'set sts=0 | set tabstop=' . s:default_tab_width . ' | set noexpandtab | set shiftwidth=' . s:default_tab_width
+                let cmd = 'set sts=0 | set tabstop=' . s:tab_tab_width . ' | set noexpandtab | set shiftwidth=' . s:tab_tab_width
         elseif result[0] == 'mixed'
                 call s:info('mixed')
                 "tab:
